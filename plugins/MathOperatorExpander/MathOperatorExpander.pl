@@ -1,6 +1,6 @@
 package MT::Plugin::OMV::MathOperatorExpander;
 ########################################################################
-#   MathOperatorExpander 1.0.0
+#   MathOperatorExpander 1.1.0
 #           Copyright (c) Piroli YUKARINOMIYA
 ########################################################################
 use strict;
@@ -78,6 +78,26 @@ my $func_original = \&MT::Template::Context::_math_operation;
         return $lvalue unless $lvalue =~ m/^\-?[\d\.]+$/;
         return rand $rvalue if defined $rvalue && $rvalue =~ m/^\-?[\d\.]+$/;
         return rand $lvalue;
+    }
+    if( 'md5' eq $op ) {
+        use Digest::MD5;
+        return Digest::MD5::md5_hex( $rvalue ) if defined $rvalue;
+        return Digest::MD5::md5_hex( $lvalue );
+    }
+    if( 'sha1' eq $op ) {
+        use Digest::SHA1;
+        return Digest::SHA1::sha1_hex( $rvalue ) if defined $rvalue;
+        return Digest::SHA1::sha1_hex( $lvalue );
+    }
+    if( 'base64encode' eq $op ) {
+        use MIME::Base64 ();
+        return MIME::Base64::encode( $rvalue ) if defined $rvalue;
+        return MIME::Base64::encode( $lvalue );
+    }
+    if( 'base64decode' eq $op ) {
+        use MIME::Base64 ();
+        return MIME::Base64::decode( $rvalue ) if defined $rvalue;
+        return MIME::Base64::decode( $lvalue );
     }
 
     ### Pack/Unpack
